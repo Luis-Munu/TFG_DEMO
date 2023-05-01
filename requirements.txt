@@ -1,9 +1,8 @@
-urllib
-pandas
-streamlit
-geopy
-streamlit_extras
-altair
-st_aggrid
-PIL
-st_pages
+altair==4.2.0
+geopy==2.3.0
+pandas==1.5.0
+Pillow==9.5.0
+st_pages==0.4.1
+streamlit==1.22.0
+streamlit_extras==0.2.7
+~treamlit==1.15.1
