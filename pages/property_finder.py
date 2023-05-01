@@ -34,23 +34,20 @@ try:
                 if st.button("Estudio de la vivienda"):
                     st.session_state["show_property"] = False
                     switch_page("Caracteristicas de la propiedad")
-            if st.button("Filtrar"):
-                st.session_state["show_filters"] = not st.session_state["show_filters"]
 
-            if st.session_state["show_filters"]:
-                zone = st.multiselect("Zona", options=df['Zona'].unique())
-                city = st.multiselect("Ciudad", options=df['Ciudad'].unique())
-                property_type = st.multiselect("Tipo", options=df['Tipo'].unique())
-                rooms = st.slider("Habitaciones", int(df['Habitaciones'].min()), int(df['Habitaciones'].max()), value=int(df['Habitaciones'].min()))
-                bathrooms = st.slider("Baños", int(df['Baños'].min()), int(df['Baños'].max()), value=int(df['Baños'].min()))
+            zone = st.multiselect("Zona", options=df['Zona'].unique())
+            city = st.multiselect("Ciudad", options=df['Ciudad'].unique())
+            property_type = st.multiselect("Tipo", options=df['Tipo'].unique())
+            rooms = st.slider("Habitaciones", int(df['Habitaciones'].min()), int(df['Habitaciones'].max()), value=int(df['Habitaciones'].min()))
+            bathrooms = st.slider("Baños", int(df['Baños'].min()), int(df['Baños'].max()), value=int(df['Baños'].min()))
 
-                if property_type:
-                    df = df[df['Tipo'].isin(property_type)]
-                if zone:
-                    df = df[df['Zona'].isin(zone)]
-                if city:
-                    df = df[df['Ciudad'].isin(city)]
-                df = df[(df['Habitaciones'] >= rooms) & (df['Baños'] >= bathrooms)]
+            if property_type:
+                df = df[df['Tipo'].isin(property_type)]
+            if zone:
+                df = df[df['Zona'].isin(zone)]
+            if city:
+                df = df[df['Ciudad'].isin(city)]
+            df = df[(df['Habitaciones'] >= rooms) & (df['Baños'] >= bathrooms)]
 
             if st.session_state["show_property"]:
                 st.markdown("<a style='color: #ff9900;' href='{}' target='_blank'>Ver propiedad</a>".format(st.session_state["property_url"]), unsafe_allow_html=True)
