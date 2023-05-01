@@ -1,0 +1,9 @@
+urllib
+pandas
+streamlit
+geopy
+streamlit_extras
+altair
+st_aggrid
+PIL
+st_pages
