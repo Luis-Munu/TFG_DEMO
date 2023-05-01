@@ -47,7 +47,7 @@ try:
     with col1:
         avg_parent_price = parent_properties["Precio"].mean()
         avg_price = properties["Precio"].mean()
-        st.metric(label="Precio medio", value="{:,.0f} €".format(avg_price).replace(",", "."), delta="{:,.0f} €".format((avg_price - avg_parent_price).round(2)).replace(",", "."), delta_color="inverse" if avg_price < avg_parent_price else "normal")
+        st.metric(label="Precio medio", value="{:,.0f} €".format(avg_price).replace(",", "."), delta="{:,.0f} €".format((avg_price - avg_parent_price).round(2)).replace(",", "."), delta_color="inverse")
     
     with col2:
         st.metric(label="Rentabilidad Media", value="{:,.0f} %".format(zone["Rentabilidad Media"]), delta="{:,.0f} %".format((zone["Rentabilidad Media"] - zones["Rentabilidad Media"].mean()).round(2)))
@@ -58,7 +58,7 @@ try:
 
         avg_ppsqm = properties.apply(lambda row: 0 if row["Precio"] == 0 or row["Metros cuadrados"] == 0
                                                     else row["Precio"] / row["Metros cuadrados"], axis=1).mean()
-        st.metric(label="Precio medio por metro cuadrado", value="{:,.0f} €".format(avg_ppsqm).replace(",", "."), delta="{:,.0f} €".format((avg_ppsqm - avg_parent_ppsqm).round(2)).replace(",", "."), delta_color="inverse" if avg_ppsqm < avg_parent_ppsqm else "normal")
+        st.metric(label="Precio medio por metro cuadrado", value="{:,.0f} €".format(avg_ppsqm).replace(",", "."), delta="{:,.0f} €".format((avg_ppsqm - avg_parent_ppsqm).round(2)).replace(",", "."), delta_color="inverse")
     
     with col4:
         st.metric(label="Metros cuadrados", value="{:,.0f} m²".format(properties["Metros cuadrados"].mean()), delta="{:,.0f} m²".format((properties["Metros cuadrados"].mean() - parent_properties["Metros cuadrados"].mean()).round(2)))
@@ -72,7 +72,7 @@ try:
             st.metric(label="Número de propiedades", value="{:,.0f}".format(properties["Precio"].count()), delta="{:,.0f}".format(properties["Precio"].count() - parent_properties["Precio"].count()))
             st.metric(label="Número de habitaciones medio", value="{:,.0f}".format(properties["Habitaciones"].mean()), delta="{:,.0f}".format(properties["Habitaciones"].mean() - parent_properties["Habitaciones"].mean()))
             st.metric(label="Número de baños medio", value="{:,.0f}".format(properties["Baños"].mean()), delta="{:,.0f}".format(properties["Baños"].mean() - parent_properties["Baños"].mean()))
-            st.metric(label="Antigüedad media", value="{:,.0f} años".format(properties["Antigüedad"].mean()), delta="{:,.0f} años".format(properties["Antigüedad"].mean() - parent_properties["Antigüedad"].mean()))
+            st.metric(label="Antigüedad media", value="{:,.0f} días".format(properties["Antigüedad"].mean()), delta="{:,.0f} años".format(properties["Antigüedad"].mean() - parent_properties["Antigüedad"].mean()), delta_color="inverse")
             st.metric(label="Número de plantas medio", value="{:,.0f}".format(properties["Piso"].mean()), delta="{:,.0f}".format(properties["Piso"].mean() - parent_properties["Piso"].mean()))
         with col2:
             st.write("Comodidades de las viviendas")
@@ -87,16 +87,16 @@ try:
             utils.compare_commodities("Piscina", "Piscina", properties, parent_properties)
             avg_parent_price = parent_properties["Precio"].mean()
             avg_price = properties["Precio"].mean()
-            st.metric(label="Nivel del barrio", value="Bajo" if avg_price < avg_parent_price * 0.33 else "Medio" if avg_price < avg_parent_price * 0.66 else "Alto", delta="")
+            st.metric(label="Nivel del barrio", value="Bajo" if avg_price < avg_parent_price * 0.6 else "Medio" if avg_price < avg_parent_price * 1.3 else "Alto", delta="")
         with col4:
             st.write("Impuestos")
-            st.metric(label="ITP", value="{:,.0f} €".format(properties["ITP"].mean()), delta="{:,.0f} €".format(properties["ITP"].mean() - parent_properties["ITP"].mean()))
-            st.metric(label="Seguro", value="{:,.0f} €".format(properties["Seguro"].mean()), delta="{:,.0f} €".format(properties["Seguro"].mean() - parent_properties["Seguro"].mean()))
-            st.metric(label="IBI", value="{:,.0f} €".format(properties["IBI"].mean()), delta="{:,.0f} €".format(properties["IBI"].mean() - parent_properties["IBI"].mean()))
+            st.metric(label="ITP", value="{:,.0f} €".format(properties["ITP"].mean()), delta="{:,.0f} €".format(properties["ITP"].mean() - parent_properties["ITP"].mean()), help="Impuesto de transmisiones patrimoniales, varía según la comunidad autónoma entre un 4% y un 10%")
+            st.metric(label="Seguro", value="{:,.0f} €".format(properties["Seguro"].mean()), delta="{:,.0f} €".format(properties["Seguro"].mean() - parent_properties["Seguro"].mean()), help="Seguro de hogar, varía según la compañía y la vivienda")
+            st.metric(label="IBI", value="{:,.0f} €".format(properties["IBI"].mean()), delta="{:,.0f} €".format(properties["IBI"].mean() - parent_properties["IBI"].mean()), help="Impuesto de bienes inmuebles, se situa entre un 0.4% y un 1.3% según la vivienda")
         with col5:
             st.write("Costos anuales")
-            st.metric(label="Comunidad", value="{:,.0f} €".format(properties["Comunidad"].mean()), delta="{:,.0f} €".format(properties["Comunidad"].mean() - parent_properties["Comunidad"].mean()))
-            st.metric(label="Mantenimiento", value="{:,.0f} €".format(properties["Mantenimiento"].mean()), delta="{:,.0f} €".format(properties["Mantenimiento"].mean() - parent_properties["Mantenimiento"].mean()))
+            st.metric(label="Comunidad", value="{:,.0f} €".format(properties["Comunidad"].mean()), delta="{:,.0f} €".format(properties["Comunidad"].mean() - parent_properties["Comunidad"].mean()), help="Gastos de comunidad de vecinos")
+            st.metric(label="Mantenimiento", value="{:,.0f} €".format(properties["Mantenimiento"].mean()), delta="{:,.0f} €".format(properties["Mantenimiento"].mean() - parent_properties["Mantenimiento"].mean()), help="Gastos de mantenimiento de la vivienda")
             st.metric(label="Otros costos", value="{:,.0f} €".format(properties["Costos"].mean()), delta="{:,.0f} €".format(properties["Costos"].mean() - parent_properties["Costos"].mean()))
         with col6:
             st.write("Alquiler medio")

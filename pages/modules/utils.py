@@ -105,17 +105,17 @@ def get_chart(dataframe, column):
 def property_to_numeric(dataset, column):
     # Data is stored as Yes or No, we need to convert it to 1 or 0
     # iterate through all the rows
-    counter = 0
-    for row in dataset[column]:
-        if row == "Yes":
-            counter+=1
-    return counter/len(dataset[column])
+    return sum(1 for row in dataset[column] if row == "Yes") / len(dataset[column])
 
 def compare_commodities(name, col, df1, df2):
+    val1, val2 = property_to_numeric(df1, col), property_to_numeric(df2, col)
+    val1, val2 = int(val1 > 0.5), int(val2 > 0.5)
+    
     st.metric(
         label=name,
-        value="Sí" if property_to_numeric(df1, col) > 0.5 else "No",
-        delta="Sí" if property_to_numeric(df2, col) > 0.5 else "No"
+        value="Sí" if val1 == 1 else "No",
+        delta="Sí" if val2 == 1 else "No",
+        delta_color="normal" if val1 != val2 else "off"
     )
 
 banks = {

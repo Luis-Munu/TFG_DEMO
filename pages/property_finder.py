@@ -31,9 +31,11 @@ try:
 
         with filtercol:
             if st.session_state["show_property"]:
+                st.markdown("<a style='color: #ff9900;' href='{}' target='_blank'>Ver anuncio</a>".format(st.session_state["property_url"]), unsafe_allow_html=True)
                 if st.button("Estudio de la vivienda"):
                     st.session_state["show_property"] = False
                     switch_page("Caracteristicas de la propiedad")
+                
 
             zone = st.multiselect("Zona", options=df['Zona'].unique())
             city = st.multiselect("Ciudad", options=df['Ciudad'].unique())
@@ -48,9 +50,7 @@ try:
             if city:
                 df = df[df['Ciudad'].isin(city)]
             df = df[(df['Habitaciones'] >= rooms) & (df['Baños'] >= bathrooms)]
-
-            if st.session_state["show_property"]:
-                st.markdown("<a style='color: #ff9900;' href='{}' target='_blank'>Ver propiedad</a>".format(st.session_state["property_url"]), unsafe_allow_html=True)
+                
 
         with datacol:
             # align cell text to the left
