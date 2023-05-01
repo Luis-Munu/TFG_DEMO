@@ -55,7 +55,7 @@ def initialize_session_state():
     if "bank_name" not in st.session_state: st.session_state["bank_name"] = "Santander"
     if "fixed_interest" not in st.session_state: st.session_state["fixed_interest"] = 0.0523
     if "max_mortgage_age" not in st.session_state: st.session_state["max_mortgage_age"] = 80
-    if "show_filters" not in st.session_state: st.session_state["show_filters"] = False
+    if "show_filters" not in st.session_state: st.session_state["show_filters"] = True
     if "show_property" not in st.session_state: st.session_state["show_property"] = False
     if "show_zone" not in st.session_state: st.session_state["show_zone"] = False
     if "property_id" not in st.session_state: st.session_state["property_id"] = None

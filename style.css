@@ -36,6 +36,22 @@
   top: 100px;
 }
 
+.ag-header-cell-label {
+    justify-content: left !important;
+ }
+
+.ag-cell {
+    justify-content: left !important;
+    align-items: left !important;
+  }
+
+.col_heading   {text-align: left !important}
+
+#gridToolBar {
+    display: none !important;
+  }
+
+
 [data-testid="stMetricLabel"] [data-testid="stMarkdownContainer"] p {
     font-size: 20px;
 }

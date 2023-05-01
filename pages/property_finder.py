@@ -31,7 +31,6 @@ try:
 
         with filtercol:
             if st.session_state["show_property"]:
-                
                 if st.button("Estudio de la vivienda"):
                     st.session_state["show_property"] = False
                     switch_page("Caracteristicas de la propiedad")
@@ -53,14 +52,34 @@ try:
                     df = df[df['Ciudad'].isin(city)]
                 df = df[(df['Habitaciones'] >= rooms) & (df['Baños'] >= bathrooms)]
 
-            st.markdown("<a style='color: #ff9900;' href='{}' target='_blank'>Ver propiedad</a>".format(st.session_state["property_url"]), unsafe_allow_html=True)
+            if st.session_state["show_property"]:
+                st.markdown("<a style='color: #ff9900;' href='{}' target='_blank'>Ver propiedad</a>".format(st.session_state["property_url"]), unsafe_allow_html=True)
 
         with datacol:
+            # align cell text to the left
             options = GridOptionsBuilder.from_dataframe(
-            df, enableRowGroup=True, enableValue=True, enablePivot=True
+                df, enableRowGroup=True, enableValue=True, enablePivot=True
             )
             options.configure_selection("single")
-            selection = AgGrid(df, height=3000, enable_enterprise_module = True, 
+            options.configure_columns(cellStyle={"textAlign": "left"})
+            custom_css ="""
+            <style>
+                .ag-header-cell-label {
+                    justify-content: left !important;
+                }
+
+                .ag-cell {
+                    justify-content: left !important;
+                    align-items: left !important;
+                }
+
+                .col_heading   {text-align: left !important}
+
+                #gridToolBar {
+                    display: none !important;
+                }
+            """
+            selection = AgGrid(df, custom_css=custom_css, height=3000, enable_enterprise_module = True, 
                             gridOptions = options.build(), update_mode=GridUpdateMode.MODEL_CHANGED, 
                             columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,
                             reload_data= True, width=1000, allow_unsafe_jscode=True)

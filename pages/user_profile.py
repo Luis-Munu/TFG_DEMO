@@ -1,9 +1,5 @@
-import base64
-
 import streamlit as st
 from PIL import Image
-from st_pages import hide_pages
-from streamlit_extras.switch_page_button import switch_page
 import modules.utils as utils
 
 utils.manage_css_style("Perfil de usuario", "🌍", "wide", "collapsed")
@@ -44,10 +40,6 @@ with column2:
         st.session_state["fixed_interest"] = utils.banks[bank]["interest_rate"]
         st.session_state["max_mortgage_age"] = utils.banks[bank]["max_mortgage_age"]
 
-        # show the selected bank's interest rate and max mortgage age
-        st.markdown(f"**Tasa de interés:** {st.session_state['fixed_interest']}")
-        st.markdown(f"**Edad máxima de la hipoteca:** {st.session_state['max_mortgage_age']}")
-
 with column1:
         image = Image.open('images/logon.png')
-        st.image(image, width=500)
+        st.image(image, use_column_width=True)

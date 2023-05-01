@@ -54,19 +54,19 @@ try:
     data = data.sort_values(by=sort_column, ascending=False)
     data.reset_index(inplace=True)
     options = GridOptionsBuilder.from_dataframe(
-        data, enableRowGroup=True, enableValue=True, enablePivot=True
-        )
+        data, enableRowGroup=True, enableValue=True, enablePivot=True, suppressToolBar=True
+    )
+    options.configure_columns(cellStyle={"textAlign": "left"})
     options.configure_selection("single")
-    selection = AgGrid(data, enable_enterprise_module = True, 
-                    gridOptions = options.build(), update_mode=GridUpdateMode.MODEL_CHANGED, 
+    selection = AgGrid(data, enable_enterprise_module=True,
+                    gridOptions=options.build(), update_mode=GridUpdateMode.MODEL_CHANGED,
                     columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,
-                    reload_data= True, width=1000, allow_unsafe_jscode=True)
+                    reload_data=True, width=1000, allow_unsafe_jscode=True)
     if selection and len(selection["selected_rows"]) > 0:
         st.session_state["show_zone"] = True
         st.write(selection["selected_rows"][0])
         st.session_state["zone_city"] = selection["selected_rows"][0]["Zona Principal"]
         st.session_state["zone_name"] = selection["selected_rows"][0]["Zona"]
-
 
 
     # Plot comparison data as a bar chart

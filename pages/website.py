@@ -11,7 +11,7 @@ st.markdown("<h3 style='text-align: center; color: #ff9900;'><br><br>InversApp t
 
 # Background images and logo
 image = Image.open('images/logon.png')
-st.image(image, width=1400)
+st.image(image, use_column_width=True)
 
 property_finder_text = "Buscador de propiedades: Encuentra propiedades en función de tus criterios."
 property_statistics_text = "Estadisticas de propiedad: Analiza los datos clave de una propiedad seleccionada."
@@ -26,3 +26,5 @@ left_col.markdown(f"- **{property_statistics_text}**")
 right_col.markdown(f"- **{zone_finder_text}**")
 right_col.markdown(f"- **{user_data_text}**")
 
+# add some empty space
+st.markdown("<br> </br>", unsafe_allow_html=True)
