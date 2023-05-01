@@ -70,7 +70,7 @@ def get_property_data():
     df = df.rename(columns=property_translation)
     df.drop(columns=["Unnamed: 0", "Identificador"], inplace=True)
     df = df.apply(lambda col: pd.to_numeric(col, errors='ignore') if col.dtype == object else col)
-    df["Precio por m²"] = df["Precio"] / df["Metros cuadrados"]
+    df["Precio por m²"] = df["Precio"] / df["Metros cuadrados"] if df["Metros cuadrados"] != 0 else 0
     df = df.round(2)
     df = df[["Rentabilidad", "Precio", "Metros cuadrados", "Habitaciones", "Precio por m²", "Tipo", "Zona", "Ciudad", "Grupo inter-barrio", "Percentil de barrio", "Baños", "Antigüedad", "Piso", "Ascensor", "Balcón", "Terraza", "Calefacción", "Aire acondicionado", "Parking", "Piscina", "ITP", "Seguro", "IBI", "Comunidad", "Mantenimiento", "Costos", "Cantidad a pagar", "Hipoteca total", "Hipoteca mensual", "Ingresos", "Titulo", "Enlace", "Identificacion"]]
     return df
