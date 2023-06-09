@@ -36,11 +36,19 @@ try:
         if st.button("❤️"):
             # add row to favorite properties in session state pandas dataset
             # also show a message that the property has been added to favorites and make the message fade over 3 seconds
-            if property["DB ID"] not in st.session_state["favorite_properties"]["DB ID"].values:
+            if "favorite_properties" in st.session_state and not st.session_state["favorite_properties"].empty:
+                if "DB ID" not in st.session_state["favorite_properties"].columns:
+                    st.session_state["favorite_properties"] = st.session_state["favorite_properties"].append(property)
+                    alert = st.warning("Propiedad añadida a favoritos")
+                elif property["DB ID"] not in st.session_state["favorite_properties"]["DB ID"].values:
+                    st.session_state["favorite_properties"] = st.session_state["favorite_properties"].append(property)
+                    alert = st.warning("Propiedad añadida a favoritos")
+                else:
+                    alert = st.warning("Propiedad ya añadida a favoritos")
+            else:
                 st.session_state["favorite_properties"] = st.session_state["favorite_properties"].append(property)
                 alert = st.warning("Propiedad añadida a favoritos")
-            else:
-                alert = st.warning("Propiedad ya añadida a favoritos")
+            
             
             time.sleep(3)
             alert.empty()
