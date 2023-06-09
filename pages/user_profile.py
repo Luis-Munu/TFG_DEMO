@@ -68,7 +68,7 @@ grid_data = st.session_state["favorite_properties"]
 
 # check if the dataframe is empty and filter all properties that are not in the autonomous community of the user
 if not grid_data.empty and not grid_data[grid_data['Comunidad Autónoma'] == st.session_state["autonomous_community"]].empty:
-
+    grid_data = grid_data[grid_data['Comunidad Autónoma'] == st.session_state["autonomous_community"]]
     zonecol, citycol, typecol = st.columns([1, 1, 1])
     with zonecol:
         zone = st.multiselect("Zona", options=grid_data['Zona'].unique())
