@@ -13,8 +13,6 @@ import logging
 from unidecode import unidecode
 import ast
 
-
-
 logging.basicConfig(level=logging.ERROR)
 
 def get_base64_of_bin_file(png_file):
@@ -105,6 +103,8 @@ def update_properties(properties, age, savings, max_age, interest_rate, autonomo
     # filter the properties by salary, currently disabled.
     # Filter the properties by the autonomous community, use check_community
     properties = community_filter(properties, autonomous_community)
+    if properties.empty:
+        return properties
     properties["amount_to_pay"] = properties.apply(lambda x: max(0, x["price"] - savings), axis=1)
     properties["total_mortgage"] = properties.apply(lambda x: total_mortgage(x, age, max_age, interest_rate, savings), axis=1)
     properties['monthly_mortgage'] = properties.apply(lambda x: mortgage(x, age, max_age, interest_rate), axis=1)
@@ -141,6 +141,9 @@ def profitability(house):
 
 def community_filter(properties, autonomous_community):
     zones = get_zone_data_local()
+    if zones.empty:
+        # return an empty dataframe if there are no zones
+        return pd.DataFrame()
     # now we have to get the list of all properties that are contained in these zones
     property_ids = [id for zone in zones['Propiedades'] for id in zone]
     properties = properties[properties['_id'].isin(property_ids)]
@@ -158,7 +161,7 @@ def get_property_data_local():
         return df
     df = df.rename(columns=property_translation)
 
-    df = df[df["Metros cuadrados"] != 0]
+    df = df[(df["Metros cuadrados"] != 0) & (df["Metros cuadrados"] < 1000)]
     df["Precio por m²"] = df["Precio"] / df["Metros cuadrados"]
     df = df.round(2)
     df = df[["Rentabilidad", "Precio", "Metros cuadrados", "Habitaciones", "Precio por m²", "Tipo", "Zona", 
@@ -166,9 +169,11 @@ def get_property_data_local():
              "Planta", "Ascensor", "Balcón", "Terraza", "Calefacción", "Aire acondicionado", "Parking", 
              "Piscina", "ITP", "Seguro", "IBI", "Comunidad", "Mantenimiento", "Gastos mensuales", "Cantidad a pagar", 
              "Hipoteca total", "Hipoteca mensual", "Ingresos", "Titulo", "Enlace", "Identificacion", "DB ID", "ID zona"]]
+    # replace all non-numeric values of "Planta" with 0
+    df["Planta"] = df["Planta"].replace(to_replace=r'^\D+$', value=0, regex=True)
     df = df.apply(lambda col: pd.to_numeric(col, errors='ignore') if col.dtype == object else col)
     df["ID zona"] = df["ID zona"].astype(str)
-    df = df[df["Rentabilidad"] < 50]
+    #df = df[df["Rentabilidad"] < 50]
     df = df[df["Precio"] < int(st.session_state["max_amount"])]
     return df
 
@@ -199,9 +204,10 @@ def get_property_data():
              "Planta", "Ascensor", "Balcón", "Terraza", "Calefacción", "Aire acondicionado", "Parking", 
              "Piscina", "ITP", "Seguro", "IBI", "Comunidad", "Mantenimiento", "Gastos mensuales", "Cantidad a pagar", 
              "Hipoteca total", "Hipoteca mensual", "Ingresos", "Titulo", "Enlace", "Identificacion", "DB ID", "ID zona"]]
+    df = df.apply(lambda col: pd.to_numeric(col, errors='ignore') if col.dtype == object else col)
     # change ID zona to string in order to avoid reaching int64 limit
     df["ID zona"] = df["ID zona"].astype(str)
-    df = df[df["Rentabilidad"] < 50]
+    #df = df[df["Rentabilidad"] < 50]
     df = df[df["Precio"] < int(st.session_state["max_amount"])]
     return df
 

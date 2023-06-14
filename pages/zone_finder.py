@@ -27,13 +27,16 @@ try:
     with content:
         # Get zone data and sort by "Zona" column
         zones = utils.get_zone_data_local()
+        if zones.empty:
+            st.markdown("<h3 style='text-align: center; color: #000000;'><br><br>¡No hay datos de zonas disponibles en esa comunidad!</h1>", unsafe_allow_html=True)
+            st.stop()
         zones = zones.sort_values(by="Zona", ascending=False)
         # Create two columns layout
         drop1, drop2 = st.columns([2, 2])
 
         # Add a dropdown to select view option
         display_option = drop1.selectbox(
-            "Elige una opción de visualización", options=['General', 'Alquiler', 'Venta']
+            "Elige una opción de visualización", options=['General', 'Alquiler', 'Venta'], key='zf_display_option'
         )
         # Filter dataframe based on display option
         if display_option != 'General':
@@ -47,11 +50,11 @@ try:
 
         zones.set_index("Zona", inplace=True)
         # Add a multi-select box for specific zones
-        zone_list = st.multiselect("Busca una zona en concreto", options=zones.index)
+        zone_list = st.multiselect("Busca una zona en concreto", options=zones.index, key='zf_zone_list')
 
         # Add a dropdown to select a statistic to compare
         columns = list(zones.select_dtypes(include='number').columns)
-        sort_column = drop2.selectbox("Selecciona una estadística a comparar", options=columns, index=0)
+        sort_column = drop2.selectbox("Selecciona una estadística a comparar", options=columns, index=0, key='zf_sort_column')
 
         # Show navigation button if show zone
         if st.session_state["show_zone"]:

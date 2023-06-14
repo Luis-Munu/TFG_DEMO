@@ -22,12 +22,13 @@ try:
     properties = utils.get_property_data_local()
     zones = utils.get_zone_data_local()
 
-    property = properties[properties["Identificacion"] == st.session_state["property_id"]]
-    if property.empty:
+    property = properties[properties["DB ID"] == st.session_state["property_id"]]
+    if property.empty or zones.empty:
         st.error("No se ha encontrado la vivienda")
         st.stop()
     property = property.iloc[0]
-
+    
+    
     # Get the properies of the zone. on the right of this first markdown, add a button with the shape of a heart. When clicked, add the property to the favorites list
     coltitle, colheart = st.columns([10, 1])
     with coltitle:
@@ -53,14 +54,15 @@ try:
             time.sleep(3)
             alert.empty()
     st.markdown("<a style='color: #000000; font-weight: bold;' href='{}' target='_blank'>Ver anuncio</a>".format(st.session_state["property_url"]), unsafe_allow_html=True)
-    st.write(property["Zona"], ", ", property["Ciudad"])
-    zone_id = unidecode(property["Zona"] + ", " + property["Ciudad"])
-    zone = zones[zones["Nombre Completo"].apply(lambda x: unidecode(x)) == zone_id].iloc[0]
+    #st.write(property["Zona"], ", ", property["Ciudad"])
+    #zone_id = unidecode(property["Zona"] + ", " + property["Ciudad"])
+    #zone = zones[zones["Nombre Completo"].apply(lambda x: unidecode(x)) == zone_id].iloc[0]
+    zone = zones[zones["Identificador"] == property["ID zona"]].iloc[0]
     
     # This is necessary to calculate the average profitability of the zone
     zone_properties = properties[(properties["Zona"] == property["Zona"]) & (properties["Ciudad"] == property["Ciudad"])]
     if len(zone_properties) > 1: zone_properties = zone_properties[zone_properties["Identificacion"] != property["Identificacion"]]
-
+    property = property.apply(pd.to_numeric, errors='ignore')
     # Compare property with zone, primary attributes
     st.write("Comparación de la vivienda con la media de la zona")
     col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
