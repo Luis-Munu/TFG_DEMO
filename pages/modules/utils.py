@@ -213,6 +213,7 @@ def get_property_data():
 
 def get_zone_data_local():
     df = pd.read_csv("zones_statistics.csv")
+
     df = df[df['autonomous_community'] == st.session_state["autonomous_community"]]
     if df.empty: return df
     df = df.drop(columns=["Unnamed: 0"])

@@ -127,21 +127,21 @@ try:
         with column1:
             field1, field2 = st.columns(2)
             years = field1.slider("Años de hipoteca", 1, 30, min(25, 80 - int(st.session_state["age"])), 1)
-            salary = field2.number_input("Salario", 0.1, 100000.0, float(st.session_state["salary"]), 100.0)
+            salary = field2.number_input("Salario", 0.01, 100000.0, float(st.session_state["salary"]), 100.0)
         with column2:
             field1, field2 = st.columns(2)
-            savings = field1.number_input("Ahorros", 0.1, 1000000.0, float(st.session_state["savings"]), 100.0)
-            interest_rate = field2.slider("Interés esperado", 0.1, 0.2, float(st.session_state["fixed_interest"]), 0.01)
+            savings = field1.number_input("Ahorros", 0.01, 1000000.0, float(st.session_state["savings"]), 100.0)
+            interest_rate = field2.slider("Interés esperado", 0.01, 0.2, float(st.session_state["fixed_interest"]), 0.01)
 
         field1, field2, field3 = st.columns(3)
         building_cost = field1.slider("Gasto de obra", 0.1, 100000.0, 0.1, 100.0)
         furnishing_cost =  field2.slider("Gasto de puesta a punto", 0.1, 30000.0, 0.1, 100.0)
-        rent = field3.slider("Alquiler esperado", 0.1, float(property["Ingresos"] * 3), float(property["Ingresos"]), 25.0)
+        rent = field3.slider("Alquiler esperado", 0.1, float(property["Ingresos"] * 3), float(property["Ingresos"]), 10.0)
             
         field1, field2, field3 = st.columns(3)
         expenses = field1.slider("Gastos anuales previstos", 0.1, 
-                                    float(property["Seguro"] + property["IBI"] + property["Comunidad"] + property["Mantenimiento"]) * 3, 
-                                    float(property["Seguro"] + property["IBI"] + property["Comunidad"] + property["Mantenimiento"]), 
+                                    float(property["Seguro"] + property["Comunidad"] + property["Mantenimiento"]) * 3, 
+                                    float(property["Seguro"] + property["Comunidad"] + property["Mantenimiento"]), 
                                     10.0)
         itp = field2.slider("ITP", 0.01, 0.15, 0.08, 0.01)
         ibi = field3.slider("IBI", 0.01, 0.15, 0.04, 0.01)
@@ -165,13 +165,13 @@ try:
         with column2:
             col1, col2 = st.columns(2)
             col1.metric("Cuota mensual con gastos", value = "{:,.0f} €".format(quota).replace(",", "."))
-            total_mortgage = mortgage_quota * years * 12 + savings
+            total_mortgage = mortgage_quota * years * 12
             col2.metric("Hipoteca total", value = "{:,.0f} €".format(total_mortgage).replace(",", "."))
 
         with column3:
             col1, col2 = st.columns(2)
             col1.metric("Porcentaje del salario", value = "{:,.0f} %".format((quota / salary) * 100).replace(",", "."))
-            net_profit = (rent * 12) - mortgage_quota * 12 - expenses - property["Precio"] * ibi
+            net_profit = rent * 12 - mortgage_quota * 12 - expenses - property["Precio"] * ibi
             net_profit_rate = (net_profit / buy_expenses) * 100
             col2.metric("Rentabilidad neta", value = "{:,.2f} %".format(net_profit_rate).replace(",", "."))
 
